@@ -7,15 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D155846E267DAD6900FD3BBA /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D155846D267DAD6900FD3BBA /* BLEManager.swift */; };
 		D17588A1265F4AB200B3A74F /* BLETestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17588A0265F4AB200B3A74F /* BLETestApp.swift */; };
 		D17588A3265F4AB200B3A74F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17588A2265F4AB200B3A74F /* ContentView.swift */; };
 		D17588A5265F4AB300B3A74F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D17588A4265F4AB300B3A74F /* Assets.xcassets */; };
 		D17588A8265F4AB300B3A74F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D17588A7265F4AB300B3A74F /* Preview Assets.xcassets */; };
 		D17588AA265F4AB300B3A74F /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17588A9265F4AB300B3A74F /* Persistence.swift */; };
 		D17588AD265F4AB300B3A74F /* BLETest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D17588AB265F4AB300B3A74F /* BLETest.xcdatamodeld */; };
+		D17588B5265F4B2E00B3A74F /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17588B4265F4B2E00B3A74F /* TestView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D155846D267DAD6900FD3BBA /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		D175889D265F4AB200B3A74F /* BLETest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BLETest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D17588A0265F4AB200B3A74F /* BLETestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLETestApp.swift; sourceTree = "<group>"; };
 		D17588A2265F4AB200B3A74F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -24,6 +27,7 @@
 		D17588A9265F4AB300B3A74F /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D17588AC265F4AB300B3A74F /* BLETest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BLETest.xcdatamodel; sourceTree = "<group>"; };
 		D17588AE265F4AB300B3A74F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D17588B4265F4B2E00B3A74F /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				D17588AE265F4AB300B3A74F /* Info.plist */,
 				D17588AB265F4AB300B3A74F /* BLETest.xcdatamodeld */,
 				D17588A6265F4AB300B3A74F /* Preview Content */,
+				D17588B4265F4B2E00B3A74F /* TestView.swift */,
+				D155846D267DAD6900FD3BBA /* BLEManager.swift */,
 			);
 			path = BLETest;
 			sourceTree = "<group>";
@@ -145,6 +151,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D17588AA265F4AB300B3A74F /* Persistence.swift in Sources */,
+				D17588B5265F4B2E00B3A74F /* TestView.swift in Sources */,
+				D155846E267DAD6900FD3BBA /* BLEManager.swift in Sources */,
 				D17588A3265F4AB200B3A74F /* ContentView.swift in Sources */,
 				D17588A1265F4AB200B3A74F /* BLETestApp.swift in Sources */,
 				D17588AD265F4AB300B3A74F /* BLETest.xcdatamodeld in Sources */,
