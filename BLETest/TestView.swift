@@ -13,6 +13,7 @@ import CoreBluetooth
 struct TestView: View {
     
     @ObservedObject var bleManager = BLEManager()
+    @State var scanStatus=""
     
     var body: some View {
         VStack (spacing: 10){
@@ -42,12 +43,14 @@ struct TestView: View {
                 VStack (spacing: 10){
                     Button(action: {
                         print("Start Scanning")
+                        scanStatus = "Scanning for devices...."
                         self.bleManager.startScanning()
                     }, label: {
                         Text("Start Scanning")
                     })
                     Button(action: {
                         print("Stop Scanning")
+                        scanStatus = "Scan stopped"
                         self.bleManager.stopScanning()
                     }, label: {
                         Text("Stop Scanning")
@@ -69,8 +72,12 @@ struct TestView: View {
                     })
                 }.padding()
             }
+          
+            Text(scanStatus)
+                .captionTextStyle()
             Spacer()
         }
+    
     }
 }
 
