@@ -12,12 +12,22 @@ struct Peripheral: Identifiable {
     let id: Int
     let name: String
     let rssi: Int
-    let identifier: String
+    let identifier: UUID
     let code: String
 }
+struct MyPeripheral: Identifiable {
+    let id: Int
+    let peripheral: CBPeripheral
+}
+
 
 class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     var myCentral: CBCentralManager!
+    var myPeripheral: CBPeripheral!
+    var myPeripheralCUUID: CBUUID = UUID(string:"0x280082900")
+    
+    @Published var myPeripherals = [MyPeripheral]()
+    
     @Published var isSwitchedOn = false
     @Published var peripherals = [Peripheral]()
 
@@ -35,28 +45,44 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
         }
     }
     
-
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("Connected!!")
+        myPeripherals[0].peripheral.discoverServices([myPeripheralCUUID])
+    }
+    
+    
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         var peripheralName: String!
-        var peripheralID: String!
+        var peripheralID: UUID!
         
-        print(peripheral)
-        if let identified = peripheral.identifier as? String {
+        //print(peripheral)
+        if let identified = peripheral.identifier as? UUID {
             peripheralID = identified
         } else {
-            peripheralID = "NA"
+            peripheralID = UUID(uuidString: "TEST")
         }
         
-        if let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
-            peripheralName = name
+        //if let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
+        if let name = peripheral.name  {
+            if name == "F_ACE_5986" {
+                peripheralName = name
+
+                let newPeripheral = Peripheral(id: peripherals.count, name: peripheralName, rssi: RSSI.intValue, identifier: peripheralID,code: "")
+                print(newPeripheral)
+                let newMyPeripheral = MyPeripheral(id: myPeripherals.count, peripheral: peripheral)
+                myPeripheral = peripheral
+                myPeripherals.append(newMyPeripheral)
+                peripherals.append(newPeripheral)
+            }
+
         } else {
             peripheralName = "Unknown"
         }
         
-        let newPeripheral = Peripheral(id: peripherals.count, name: peripheralName, rssi: RSSI.intValue, identifier: peripheralID,code: "")
-        print(newPeripheral)
-        peripherals.append(newPeripheral)
+//        let newPeripheral = Peripheral(id: peripherals.count, name: peripheralName, rssi: RSSI.intValue, identifier: peripheralID,code: "")
+//        print(newPeripheral)
+//        peripherals.append(newPeripheral)
     }
     
     func startScanning() {
@@ -68,6 +94,17 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     func stopScanning() {
         print("stopScanning")
         myCentral.stopScan()
+        myPeripherals[0].peripheral.delegate = self
+        myCentral.connect(myPeripherals[0].peripheral)
+        
     }
 
+}
+extension BLEManager: CBPeripheralDelegate{
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else {return}
+        for service in services {
+            print(service)
+        }
+    }
 }
