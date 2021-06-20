@@ -24,7 +24,11 @@ struct MyPeripheral: Identifiable {
 class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     var myCentral: CBCentralManager!
     var myPeripheral: CBPeripheral!
-    var myPeripheralCUUID: CBUUID = UUID(string:"0x280082900")
+    let myPeripheralCUUID1 =  CBUUID.init(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
+    let myPeripheralCUUID2 =  CBUUID.init(string: "6E40A100-B5A3-F393-E0A9-E50E24DCCA9E")
+    let myPeripheralCUUID3 =  CBUUID.init(string: "0x180F")
+    let myPeripheralCharacteristicCUUID3 =  CBUUID.init(string: "0x2A19")
+    
     
     @Published var myPeripherals = [MyPeripheral]()
     
@@ -47,9 +51,24 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected!!")
-        myPeripherals[0].peripheral.discoverServices([myPeripheralCUUID])
+        myPeripherals[0].peripheral.discoverServices([myPeripheralCUUID3])
+        
+        //myPeripherals[0].peripheral.discoverServices(nil)
     }
     
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard let characteristics = service.characteristics else {return}
+        for characteristic in characteristics {
+            print(characteristic)
+            if characteristic.properties.contains(.read) {
+                print("\(characteristic.uuid): properties contains .read")
+                peripheral.readValue(for: characteristic)
+            }
+            if characteristic.properties.contains(.notify) {
+                print("\(characteristic.uuid): properties contains .notify")
+            }
+        }
+    }
     
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -105,6 +124,17 @@ extension BLEManager: CBPeripheralDelegate{
         guard let services = peripheral.services else {return}
         for service in services {
             print(service)
+            print(service.characteristics ?? "Characteristics are nil")
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        switch characteristic.uuid {
+        case myPeripheralCharacteristicCUUID3:
+            print(characteristic.value ?? "no value")
+        default:
+            print("inhandled characteristic UUID: \(characteristic.uuid)")
         }
     }
 }
