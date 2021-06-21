@@ -27,6 +27,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     let myPeripheralCUUID1 =  CBUUID.init(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
     let myPeripheralCUUID2 =  CBUUID.init(string: "6E40A100-B5A3-F393-E0A9-E50E24DCCA9E")
     let myPeripheralCUUID3 =  CBUUID.init(string: "0x180F")
+    let myScaleCBUUID1 = CBUUID.init(string: "4385B3F5-2953-C44E-D521-BFC7289F6757")
     let myPeripheralCharacteristicCUUID3 =  CBUUID.init(string: "0x2A19")
     
     
@@ -51,7 +52,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected!!")
-        myPeripherals[0].peripheral.discoverServices([myPeripheralCUUID3])
+        myPeripherals[0].peripheral.discoverServices(nil)//([myPeripheralCUUID3])
         
         //myPeripherals[0].peripheral.discoverServices(nil)
     }
@@ -84,7 +85,8 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
         
         //if let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
         if let name = peripheral.name  {
-            if name == "F_ACE_5986" {
+            //if name == "F_ACE_5986" {
+            if name == "Electronic Scale" {
                 peripheralName = name
 
                 let newPeripheral = Peripheral(id: peripherals.count, name: peripheralName, rssi: RSSI.intValue, identifier: peripheralID,code: "")
@@ -113,9 +115,12 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     func stopScanning() {
         print("stopScanning")
         myCentral.stopScan()
+        connectDevice()
+    }
+    
+    func connectDevice(){
         myPeripherals[0].peripheral.delegate = self
         myCentral.connect(myPeripherals[0].peripheral)
-        
     }
 
 }

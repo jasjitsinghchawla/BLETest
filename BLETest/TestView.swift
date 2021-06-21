@@ -16,67 +16,73 @@ struct TestView: View {
     @State var scanStatus=""
     
     var body: some View {
-        VStack (spacing: 10){
-            Text("Bluetooth Devices")
-                .deepRedTextStyle()
-            List(bleManager.peripherals) {peripheral in
-                HStack{
-                    Text(peripheral.name)
+       
+            NavigationView {
+                VStack (spacing: 10){
+                    Text("Bluetooth Devices")
+                        .deepRedTextStyle()
+                    List(bleManager.peripherals) {peripheral in
+                        NavigationLink(destination: ContentView()){
+                            HStack {
+                                Text(peripheral.name)
+                            }
+                            Spacer()
+                            Text(String(peripheral.rssi))
+                        }
+                    }.frame(height:300)
                     Spacer()
-                    Text(String(peripheral.rssi))
+                    Text("Status")
+                        .headLineStyle()
+                    
+                    //Status goes here
+                    if bleManager.isSwitchedOn {
+                        Text("Bluetooth On")
+                            .foregroundColor(.green)
+                    } else {
+                        Text("Bluetooth Off")
+                            .foregroundColor(.red)
+                    }
+                    
+                    HStack{
+                        VStack (spacing: 10){
+                            Button(action: {
+                                print("Start Scanning")
+                                scanStatus = "Scanning for devices...."
+                                self.bleManager.startScanning()
+                            }, label: {
+                                Text("Start Scanning")
+                            })
+                            Button(action: {
+                                print("Stop Scanning")
+                                scanStatus = "Scan stopped"
+                                self.bleManager.stopScanning()
+                            }, label: {
+                                Text("Stop Scanning")
+                            })
+                        }.padding()
+                        
+                        Spacer()
+                        
+                        VStack (spacing: 10){
+                            Button(action: {
+                                print("Start Advertising")
+                            }, label: {
+                                Text("Start Advertising")
+                            })
+                            Button(action: {
+                                print("Stop Advertising")
+                            }, label: {
+                                Text("Stop Advertising")
+                            })
+                        }.padding()
+                    }
+                  
+                    Text(scanStatus)
+                        .captionTextStyle()
+                    Spacer()
                 }
-            }.frame(height:300)
-            Spacer()
-            Text("Status")
-                .headLineStyle()
-            
-            //Status goes here
-            if bleManager.isSwitchedOn {
-                Text("Bluetooth On")
-                    .foregroundColor(.green)
-            } else {
-                Text("Bluetooth Off")
-                    .foregroundColor(.red)
             }
-            
-            HStack{
-                VStack (spacing: 10){
-                    Button(action: {
-                        print("Start Scanning")
-                        scanStatus = "Scanning for devices...."
-                        self.bleManager.startScanning()
-                    }, label: {
-                        Text("Start Scanning")
-                    })
-                    Button(action: {
-                        print("Stop Scanning")
-                        scanStatus = "Scan stopped"
-                        self.bleManager.stopScanning()
-                    }, label: {
-                        Text("Stop Scanning")
-                    })
-                }.padding()
-                
-                Spacer()
-                
-                VStack (spacing: 10){
-                    Button(action: {
-                        print("Start Advertising")
-                    }, label: {
-                        Text("Start Advertising")
-                    })
-                    Button(action: {
-                        print("Stop Advertising")
-                    }, label: {
-                        Text("Stop Advertising")
-                    })
-                }.padding()
-            }
-          
-            Text(scanStatus)
-                .captionTextStyle()
-            Spacer()
-        }
+        
     
     }
 }
