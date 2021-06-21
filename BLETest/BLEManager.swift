@@ -36,16 +36,12 @@ class BLEManager: NSObject, ObservableObject {
     let AceLightFront = CBUUID.init(string: "FDDAB01A-62C3-DB0A-98E8-F060EE99255E") // name = F_ACE_5986
     let ElectronicScale = CBUUID(string: "4385B3F5-2953-C44E-D521-BFC7289F6757") //"Electronic Scale"
     
-
-    
-    
     let Battery = CBUUID(string: "0x180F")
     let BatteryLevel = CBUUID(string: "0x2A19")
     let Light1 = CBUUID(string: "6E40A102-B5A3-F393-E0A9-E50E24DCCA9E")
     let Light2 = CBUUID(string: "6E40A102-B5A3-F393-E0A9-E50E24DCCA9E")
     let Light3 = CBUUID(string: "6E40A103-B5A3-F393-E0A9-E50E24DCCA9E")
     let Light4 = CBUUID(string: "6E40A104-B5A3-F393-E0A9-E50E24DCCA9E")
-    
     
     let Digital = CBUUID(string: "0x2A56")
     
@@ -69,9 +65,7 @@ class BLEManager: NSObject, ObservableObject {
     let SoftwareRevision = CBUUID(string: "0x2A28")
     let ManufacturerName = CBUUID(string: "0x2A29")
     let IEEERegulatoryCertification = CBUUID(string: "0x2A2A")
-    
-    
-    
+
     @Published var myPeripherals = [MyPeripheral]()
     
     @Published var isSwitchedOn = false
@@ -87,20 +81,16 @@ class BLEManager: NSObject, ObservableObject {
     func startScanning() {
         print("startScanning")
         myCentral.scanForPeripherals(withServices: nil, options: nil)
-    
     }
     
     func stopScanning() {
         print("stopScanning")
         myCentral.stopScan()
-        
     }
     
     func connectDevice(){
         myPeripherals[0].peripheral.delegate = self
         myCentral.connect(myPeripherals[0].peripheral)
-        
-        
     }
     
     func disconnectDevice(){
@@ -136,7 +126,6 @@ extension BLEManager: CBCentralManagerDelegate {
                 //stopScanning()
             }
         }
-
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -152,16 +141,9 @@ extension BLEManager: CBCentralManagerDelegate {
         print("Disconnected : \(peripheral.name  ?? "No Name")")
         myCentral.scanForPeripherals(withServices: nil, options: nil)
     }
-    
 }
 
-
-
 extension BLEManager: CBPeripheralDelegate{
-    
-
-    
-    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else {return}
         for service in services {
@@ -182,7 +164,6 @@ extension BLEManager: CBPeripheralDelegate{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
                     self.setDigitalOutput(1, on: true, characteristic: characteristic)
                 })
-                
             }
             if characteristic.properties.contains(.read) {
                 print("\(characteristic.uuid): properties contains .read")
@@ -201,6 +182,7 @@ extension BLEManager: CBPeripheralDelegate{
         case PnPID:
             print("Characteristic \(characteristic.uuid) value description - \(characteristic.value?.description ?? "No value description")")
             let level = characteristic.tb_int16Value()
+            
             print("Characteristic value tb_int16 : \(level)")
 
         case DeviceInformation:
@@ -313,18 +295,55 @@ extension BLEManager: CBPeripheralDelegate{
             print("Characteristic \(characteristic.uuid) value description - \(characteristic.value?.description ?? "No value description")")
             let level = characteristic.tb_int16Value()
             print("Characteristic value tb_int16 : \(level)")
-            print(characteristic.value?.base64EncodedString())
+            guard let data = characteristic.value else {
+                    // no data transmitted, handle if needed
+                    return
+                }
+            guard data.count == 4 else {
+                // handle unexpected number of bytes
+                return
+            }
+            let red   = data[0]
+            let green = data[1]
+            let blue  = data[2]
+            let yello = data[3]
+            print("R: \(red)", "G: \(green)", "B: \(blue)","Y: \(yello)", separator: " | ")
         case Light2:
             print("Characteristic \(characteristic.uuid) value description - \(characteristic.value?.description ?? "No value description")")
             let level = characteristic.tb_int16Value()
             print("Characteristic value tb_int16 : \(level)")
             print(characteristic.value?.base64EncodedData())
+            guard let data = characteristic.value else {
+                    // no data transmitted, handle if needed
+                    return
+                }
+            guard data.count == 4 else {
+                // handle unexpected number of bytes
+                return
+            }
+            let red   = data[0]
+            let green = data[1]
+            let blue  = data[2]
+            let yello = data[3]
+            print("A: \(red)", "B: \(green)", "C: \(blue)","D: \(yello)", separator: " | ")
         case Light3:
             print("Characteristic \(characteristic.uuid) value description - \(characteristic.value?.description ?? "No value description")")
             let level = characteristic.tb_int16Value()
             print("Characteristic value tb_int16 : \(level)")
             print(characteristic.value?.base64EncodedString())
-            
+            guard let data = characteristic.value else {
+                    // no data transmitted, handle if needed
+                    return
+                }
+            guard data.count == 4 else {
+                // handle unexpected number of bytes
+                return
+            }
+            let red   = data[0]
+            let green = data[1]
+            let blue  = data[2]
+            let yello = data[3]
+            print("A: \(red)", "B: \(green)", "C: \(blue)","D: \(yello)", separator: " | ")
             
         default:
             print("Characteristic \(characteristic.uuid) value description - \(characteristic.value?.description ?? "No value description")")
