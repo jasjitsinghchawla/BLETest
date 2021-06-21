@@ -21,15 +21,16 @@ struct TestView: View {
                 VStack (spacing: 10){
                     Text("Bluetooth Devices")
                         .deepRedTextStyle()
-                    List(bleManager.peripherals) {peripheral in
-                        NavigationLink(destination: ContentView()){
+                    
+                    List(bleManager.myPeripherals) { peripheral in
+                        
                             HStack {
-                                Text(peripheral.name)
+                                Text(peripheral.peripheral.name!)
+                                Text(peripheral.peripheral.name!)
                             }
-                            Spacer()
-                            Text(String(peripheral.rssi))
-                        }
-                    }.frame(height:300)
+                        }.frame(height:300)
+                    
+                    
                     Spacer()
                     Text("Status")
                         .headLineStyle()
@@ -65,7 +66,21 @@ struct TestView: View {
                         
                         VStack (spacing: 10){
                             Button(action: {
+                                print("Connect")
+                                self.bleManager.connectDevice()
+                            }, label: {
+                                Text("Connect")
+                            })
+                            Button(action: {
+                                print("Disconnect")
+                                self.bleManager.disconnectDevice()
+                            }, label: {
+                                Text("Disconnect")
+                            })
+                            
+                            Button(action: {
                                 print("Start Advertising")
+                                
                             }, label: {
                                 Text("Start Advertising")
                             })
